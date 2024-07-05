@@ -21,7 +21,8 @@ Pour des raisons de faciliter, voici quelques étape supplémentaire à effectue
 sudo chown root:docker /var/run/docker.sock
 sudo usermod -a -G docker "$(whoami)"
 newgrp docker
-sudo service docker start```
+sudo service docker start
+```
 
 Passons à présent à Go
 
@@ -37,7 +38,8 @@ Pour "transformer" les manifests Kubernetes de l'api server en chart Helm, nous 
 Pour ce faire, il suffit de suivre la procédure d'installation du site officiel:
 ```curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
-./get_helm.sh```
+./get_helm.sh
+```
 
 ## API
 

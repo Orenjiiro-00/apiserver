@@ -30,7 +30,17 @@ Passons à présent à Go
 
 Pour installer GO, nous allons d'abord télécharger l'archive sur le site officiel puis suivre les instructions: https://go.dev/doc/install
 
+Passons maintenant à la partie Kubernetes et Helm.
+
 ### Kubernetes
+
+Pour utiliser un cluster Kubernetes, nous avons besoin de kubectl et d'un cluster Kubernetes.
+Nous allons utiliser Minikube pour créer notre cluster pour des raisons de simplicité et de contraintes matérielles.
+
+Pour installer Kubectl et Minikube, il suffit de suivre la documentation officiel:
+- https://kubernetes.io/fr/docs/tasks/tools/install-minikube/
+- https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux
+Pour ma part, j'ai utilisé le binaire autonome pour des raisons de facilité.
 
 ### Helm
 
@@ -56,4 +66,27 @@ Les valeur à modifier se situent après ```start``` et ```end```
 ## Résultats
 
 Lorsque l'on envoie des requêtes POST, le résultat de cette dernière est stocké dans la base de donnée sqlite en JSON.
-En voici un exemple: [{"ID":1,"Timestamp":"2024-07-01T21:56:30.700617485Z","value":10}]
+En voici un exemple:
+```json
+[
+  {"ID":1,"timestamp":"2024-07-01T12:00:00Z","heartbeat":75},
+  {"ID":2,"timestamp":"2024-07-01T12:00:00Z","heartbeat":75},
+  {"ID":3,"timestamp":"2024-07-02T16:30:00Z","heartbeat":150}
+]
+```
+
+## Problèmes rencontrés
+
+### BDD
+
+L'utilisation d'une base de données s'est révélé plus compliqué que prévu une fois arrivé au stade du déploiement sur le cluster Kubernetes. La base de données utilisé qui était du sqlite3, était continuellement dans l'état `CrashLoopBackOff`. Malgré plusieurs tentatives, une solution n'a pas été trouvé. J'ai donc décidé de changer pour du MySQL.
+
+### L'api n'est pas `Ready`
+
+L'api semble ne pas passé à l'état `Ready` même si cette dernière semble bien fonctionné et est `Running`. Cela ne semble pas être un soucis pour l'instant mais devra être solutionné plus tard.
+
+## Suite du projet
+
+Par la suite, il serait intéressant d'ajouter la stack monitoring afin de surveiller les metrics de l'api.
+Il serait également judicieux de revoir les images docker utilisés afin de réduire le pods des images, les simplifiés et ajouter des mécanismes afin d'assuré le bon déploiement de l'api.
+De même, au niveau du cluster, nous pourrions ajouter des sondes, un ingress, définir les ressources et mieux séparer l'api et la base de données en deux charts diférents qui interagisseront entre eux une fois déployé.
